@@ -1,0 +1,14 @@
+import pandas as pd
+from textblob import TextBlob
+
+reviews = pd.read_csv('../data/reviews.csv')
+
+def get_sentiment(text):
+    return TextBlob(text).sentiment.polarity
+
+reviews['sentiment'] = reviews['review'].apply(get_sentiment)
+
+movie_sentiment = reviews.groupby('movieId')['sentiment'].mean().reset_index()
+print(movie_sentiment)
+
+movie_sentiment.to_csv('../data/movie_sentiment.csv', index=False)
